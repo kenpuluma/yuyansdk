@@ -40,8 +40,8 @@ class SymbolPagerAdapter(context: Context, private val mDatas: Map<Int, List<Str
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = when (val key = mDatas.keys.toList()[position]) {
             R.drawable.icon_emojibar_recents -> {
-                if (viewType != SymbolMode.Symbol) DataBaseKT.instance.usedSymbolDao().getAllSymbolEmoji().map { it.symbol }.takeIf { it.isNotEmpty() } ?: mDatas[mDatas.keys.toList()[if(YuyanEmojiCompat.isWeChatInput) 2 else 1]]
-                else DataBaseKT.instance.usedSymbolDao().getAllUsedSymbol().map { it.symbol }.takeIf { it.isNotEmpty() } ?: mDatas[mDatas.keys.toList()[1]]
+                if (viewType != SymbolMode.Symbol) DataBaseKT.instance.usedSymbolDao().getAllSymbolEmoji().map { it.symbol }.takeIf { it.isNotEmpty() } ?: emptyList()
+                else DataBaseKT.instance.usedSymbolDao().getAllUsedSymbol().map { it.symbol }.takeIf { it.isNotEmpty() } ?: emptyList()
             }
             else -> mDatas[key]
         }
