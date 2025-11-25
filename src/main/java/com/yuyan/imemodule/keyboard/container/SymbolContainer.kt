@@ -203,6 +203,7 @@ class SymbolContainer(context: Context, inputView: InputView) : BaseContainer(co
      * 切换显示界面
      */
     fun setSymbolsView() {
+        inputView.mSkbCandidatesBarView.showEmoji()
         mShowType = SymbolMode.Symbol
         isLockSymbol = true   // 符号键默认锁定，表情键盘默认锁定
         ivDelete.setImageResource(R.drawable.sdk_skb_key_delete_icon)
@@ -282,6 +283,15 @@ class SymbolContainer(context: Context, inputView: InputView) : BaseContainer(co
                 tab.view.layoutParams = LinearLayout.LayoutParams(iconTouchWidth, ViewGroup.LayoutParams.MATCH_PARENT)
             }
         }.attach()
+    }
+
+    fun clearCurrentRecents() {
+        val type = when (mShowType) {
+            SymbolMode.Symbol -> "symbol"
+            SymbolMode.Emojicon, SymbolMode.Emoticon -> "emoji"
+        }
+        DataBaseKT.instance.usedSymbolDao().clear(type)
+        mVPSymbolsView.adapter?.notifyItemChanged(0)
     }
 
     fun getMenuMode(): SymbolMode {

@@ -35,6 +35,7 @@ import com.yuyan.imemodule.keyboard.KeyboardManager
 import com.yuyan.imemodule.keyboard.container.CandidatesContainer
 import com.yuyan.imemodule.keyboard.container.ClipBoardContainer
 import com.yuyan.imemodule.keyboard.container.InputBaseContainer
+import com.yuyan.imemodule.keyboard.container.SymbolContainer
 import com.yuyan.imemodule.manager.layout.CustomLinearLayoutManager
 import splitties.dimensions.dp
 
@@ -256,24 +257,42 @@ class CandidatesBar(context: Context?, attrs: AttributeSet?) : RelativeLayout(co
         mIvMenuSetting.drawable.setLevel( if(container is InputBaseContainer) 0 else 1)
         if (container is ClipBoardContainer) {
             showViewVisibility(mCandidatesMenuContainer)
-            mCandidatesMenuAdapter.items = if(container.getMenuMode() == SkbMenuMode.ClipBoard) {
-                listOf(menuSkbFunsPreset[SkbMenuMode.ClearClipBoard]!!, menuSkbFunsPreset[SkbMenuMode.ClipBoard]!!, menuSkbFunsPreset[SkbMenuMode.Phrases]!!, menuSkbFunsPreset[SkbMenuMode.LockClipBoard]!!)
+            mCandidatesMenuAdapter.items = if (container.getMenuMode() == SkbMenuMode.ClipBoard) {
+                listOf(
+                    menuSkbFunsPreset[SkbMenuMode.LockClipBoard]!!,
+                    menuSkbFunsPreset[SkbMenuMode.Phrases]!!,
+                    menuSkbFunsPreset[SkbMenuMode.ClipBoard]!!,
+                    menuSkbFunsPreset[SkbMenuMode.ClearClipBoard]!!
+                )
             } else {
-                listOf(menuSkbFunsPreset[SkbMenuMode.AddPhrases]!!, menuSkbFunsPreset[SkbMenuMode.ClipBoard]!!, menuSkbFunsPreset[SkbMenuMode.Phrases]!!, menuSkbFunsPreset[SkbMenuMode.LockClipBoard]!!)
+                listOf(
+                    menuSkbFunsPreset[SkbMenuMode.LockClipBoard]!!,
+                    menuSkbFunsPreset[SkbMenuMode.Phrases]!!,
+                    menuSkbFunsPreset[SkbMenuMode.ClipBoard]!!,
+                    menuSkbFunsPreset[SkbMenuMode.AddPhrases]!!,
+                )
             }
         } else if (DecodingInfo.isCandidatesListEmpty) {
             mRightArrowBtn.drawable.setLevel(0)
             showViewVisibility(mCandidatesMenuContainer)
-            val mFunItems: MutableList<SkbFunItem> = mutableListOf()
-            val barMenus = DataBaseKT.instance.skbFunDao().getALlBarMenu()
-            for (item in barMenus) {
-                val skbMenuMode = SkbMenuMode.decode(item.name)
-                val skbFunItem = menuSkbFunsPreset[skbMenuMode]
-                if (skbFunItem != null) {
-                    mFunItems.add(skbFunItem)
+            if (KeyboardManager.instance.currentContainer is SymbolContainer) {
+                mCandidatesMenuAdapter.items = listOf(
+                    menuSkbFunsPreset[SkbMenuMode.Emoticon]!!,
+                    menuSkbFunsPreset[SkbMenuMode.Emojicon]!!,
+                    menuSkbFunsPreset[SkbMenuMode.ClearSymbolRecents]!!
+                )
+            } else {
+                val mFunItems: MutableList<SkbFunItem> = mutableListOf()
+                val barMenus = DataBaseKT.instance.skbFunDao().getALlBarMenu()
+                for (item in barMenus) {
+                    val skbMenuMode = SkbMenuMode.decode(item.name)
+                    val skbFunItem = menuSkbFunsPreset[skbMenuMode]
+                    if (skbFunItem != null) {
+                        mFunItems.add(skbFunItem)
+                    }
                 }
+                mCandidatesMenuAdapter.items = mFunItems
             }
-            mCandidatesMenuAdapter.items = mFunItems
         } else {
             if (DecodingInfo.candidateSize > DecodingInfo.activeCandidateBar) mRVCandidates.layoutManager?.scrollToPosition(DecodingInfo.activeCandidateBar)
             showViewVisibility(mCandidatesDataContainer)
@@ -290,7 +309,11 @@ class CandidatesBar(context: Context?, attrs: AttributeSet?) : RelativeLayout(co
      */
     fun showEmoji() {
         showViewVisibility(mCandidatesMenuContainer)
-        mCandidatesMenuAdapter.items = listOf(menuSkbFunsPreset[SkbMenuMode.Emoticon]!!,menuSkbFunsPreset[SkbMenuMode.Emojicon]!!)
+        mCandidatesMenuAdapter.items = listOf(
+            menuSkbFunsPreset[SkbMenuMode.Emoticon]!!,
+            menuSkbFunsPreset[SkbMenuMode.Emojicon]!!,
+            menuSkbFunsPreset[SkbMenuMode.ClearSymbolRecents]!!
+        )
         activeCandNo = 0
         mCandidatesAdapter.activeCandidates(activeCandNo)
         mCandidatesAdapter.notifyChanged()

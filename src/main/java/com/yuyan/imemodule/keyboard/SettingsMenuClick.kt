@@ -106,6 +106,9 @@ fun onSettingsMenuClick(inputView: InputView, skbMenuMode: SkbMenuMode) {
             KeyboardManager.instance.clearKeyboard()
             KeyboardManager.instance.switchKeyboard()
         }
+        SkbMenuMode.ClearSymbolRecents -> {
+            (KeyboardManager.instance.currentContainer as? SymbolContainer)?.clearCurrentRecents()
+        }
         SkbMenuMode.ClipBoard, SkbMenuMode.Phrases -> {
             val currentContainer = KeyboardManager.instance.currentContainer as? ClipBoardContainer
             if(currentContainer != null){
