@@ -9,6 +9,7 @@ import android.os.Message
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.MotionEvent
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -58,7 +59,7 @@ class SymbolContainer(context: Context, inputView: InputView) : BaseContainer(co
     private var mVPSymbolsView: ViewPager2
     private var tabLayout: TabLayout
     private val ivDelete: ImageView
-    var isLockSymbol = false
+    var isLockSymbol = true
     private var mHandler: Handler? = null
 
     companion object {
@@ -157,7 +158,8 @@ class SymbolContainer(context: Context, inputView: InputView) : BaseContainer(co
             }
             true
         }
-        add(mLLSymbolType, lParams(matchParent, wrapContent){
+        val symbolTabBarHeight = dp(56)
+        add(mLLSymbolType, lParams(matchParent, symbolTabBarHeight){
             bottomOfParent(0)
         })
         add(mVPSymbolsView, lParams(matchParent, matchParent){
@@ -202,8 +204,8 @@ class SymbolContainer(context: Context, inputView: InputView) : BaseContainer(co
      */
     fun setSymbolsView() {
         mShowType = SymbolMode.Symbol
-        isLockSymbol = false   // 符号键默认未锁定，表情键盘默认锁定
-        ivDelete.setImageResource(R.drawable.icon_symbol_lock)
+        isLockSymbol = true   // 符号键默认锁定，表情键盘默认锁定
+        ivDelete.setImageResource(R.drawable.sdk_skb_key_delete_icon)
         ivDelete.drawable.setTint(activeTheme.keyTextColor)
         val mSymbolsEmoji = EmojiconData.symbolData
         mVPSymbolsView.adapter = SymbolPagerAdapter(context, mSymbolsEmoji, mShowType){ symbol, _ ->
@@ -212,12 +214,25 @@ class SymbolContainer(context: Context, inputView: InputView) : BaseContainer(co
         val data = mSymbolsEmoji.keys.toList()
         TabLayoutMediator(tabLayout, mVPSymbolsView) { tab, position ->
             tab.view.background = null
+            val iconTouchWidth = dp(56)
+            val iconSize = dp(25)
             tab.setCustomView(ImageView(context).apply {
+                layoutParams = ViewGroup.LayoutParams(iconSize, iconSize)
+                scaleType = ImageView.ScaleType.FIT_CENTER
                 setImageDrawable(ContextCompat.getDrawable(context,data[position]).apply {
                     this?.setTint(activeTheme.keyTextColor)
                 })
             })
             tab.view.setPadding(dp(5))
+            tab.view.minimumWidth = iconTouchWidth
+            val params = tab.view.layoutParams
+            if (params is ViewGroup.LayoutParams) {
+                params.width = iconTouchWidth
+                params.height = ViewGroup.LayoutParams.MATCH_PARENT
+                tab.view.layoutParams = params
+            } else {
+                tab.view.layoutParams = LinearLayout.LayoutParams(iconTouchWidth, ViewGroup.LayoutParams.MATCH_PARENT)
+            }
         }.attach()
         mVPSymbolsView.currentItem = 0
     }
@@ -247,12 +262,25 @@ class SymbolContainer(context: Context, inputView: InputView) : BaseContainer(co
         val data = mSymbolsEmoji.keys.toList()
         TabLayoutMediator(tabLayout, mVPSymbolsView) { tab, position ->
             tab.view.background = null
+            val iconTouchWidth = dp(56)
+            val iconSize = dp(25)
             tab.setCustomView(ImageView(context).apply {
+                layoutParams = ViewGroup.LayoutParams(iconSize, iconSize)
+                scaleType = ImageView.ScaleType.FIT_CENTER
                 setImageDrawable(ContextCompat.getDrawable(context,data[position]).apply {
                     this?.setTint(activeTheme.keyTextColor)
                 })
             })
             tab.view.setPadding(dp(5))
+            tab.view.minimumWidth = iconTouchWidth
+            val params = tab.view.layoutParams
+            if (params is ViewGroup.LayoutParams) {
+                params.width = iconTouchWidth
+                params.height = ViewGroup.LayoutParams.MATCH_PARENT
+                tab.view.layoutParams = params
+            } else {
+                tab.view.layoutParams = LinearLayout.LayoutParams(iconTouchWidth, ViewGroup.LayoutParams.MATCH_PARENT)
+            }
         }.attach()
     }
 
