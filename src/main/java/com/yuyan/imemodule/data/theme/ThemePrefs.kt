@@ -101,6 +101,15 @@ class ThemePrefs(sharedPreferences: SharedPreferences) :
         "%"
     )
 
+    val englishKeyboardFontSize = int(
+        R.string.english_keyboard_font_size,
+        "english_keyboard_font_size",
+        120,
+        70,
+        170,
+        "%"
+    )
+
     val keyboardSymbol =
         switch(R.string.keyboard_symbol_show, "keyboard_symbol_show_enable", true)
 

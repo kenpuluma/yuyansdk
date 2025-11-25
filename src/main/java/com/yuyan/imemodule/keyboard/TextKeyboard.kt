@@ -247,7 +247,11 @@ open class TextKeyboard(context: Context?) : BaseKeyboardView(context){
         } else if (!TextUtils.isEmpty(keyLabel)) { //Label位于中间
             mPaint.color = textColor
             if(keyboardFontBold) mPaint.typeface = Typeface.DEFAULT_BOLD
-            mPaint.textSize =  mNormalKeyTextSize.toFloat()
+            val isAlphabetKey = softKey.code in KeyEvent.KEYCODE_A..KeyEvent.KEYCODE_Z
+            val englishKeyFontScale = prefs.englishKeyboardFontSize.getValue() / 100f
+            val fontScale = if (InputModeSwitcherManager.isEnglish && !keyboardSymbol && isAlphabetKey)
+                englishKeyFontScale else 1f
+            mPaint.textSize = mNormalKeyTextSize * fontScale
             val x = softKey.mLeft + (softKey.width() - mPaint.measureText(keyLabel)) / 2.0f
             val fontHeight = mFmi.bottom - mFmi.top
             val y = if(keyLabelSmall.isEmpty()) (softKey.mTop + softKey.mBottom) / 2.0f + fontHeight
