@@ -320,7 +320,8 @@ class KeyboardLoaderUtil private constructor() {
                         KeyEvent.KEYCODE_SPACE, InputModeSwitcherManager.USER_DEF_KEYCODE_NUMBER_5))
                 } else {
                     createT9Keys(arrayOf(InputModeSwitcherManager.USER_DEF_KEYCODE_SYMBOL_3, InputModeSwitcherManager.USER_DEF_KEYCODE_NUMBER_5,
-                            KeyEvent.KEYCODE_SPACE, InputModeSwitcherManager.USER_DEF_KEYCODE_LANG_2))
+                        InputModeSwitcherManager.USER_DEF_KEYCODE_LEFT_COMMA_13, KeyEvent.KEYCODE_SPACE,
+                        InputModeSwitcherManager.USER_DEF_KEYCODE_LEFT_PERIOD_14, InputModeSwitcherManager.USER_DEF_KEYCODE_LANG_2))
                 }
             }
             InputModeSwitcherManager.MASK_SKB_LAYOUT_QWERTY_ABC -> {
@@ -332,7 +333,8 @@ class KeyboardLoaderUtil private constructor() {
                         InputModeSwitcherManager.USER_DEF_KEYCODE_LEFT_COMMA_13, KeyEvent.KEYCODE_SPACE, InputModeSwitcherManager.USER_DEF_KEYCODE_LEFT_PERIOD_14, InputModeSwitcherManager.USER_DEF_KEYCODE_NUMBER_5))
                 } else {
                     createQwertyKeys(arrayOf(InputModeSwitcherManager.USER_DEF_KEYCODE_SYMBOL_3, InputModeSwitcherManager.USER_DEF_KEYCODE_NUMBER_5,
-                            InputModeSwitcherManager.USER_DEF_KEYCODE_LEFT_PERIOD_14, KeyEvent.KEYCODE_SPACE, InputModeSwitcherManager.USER_DEF_KEYCODE_LANG_2))
+                        InputModeSwitcherManager.USER_DEF_KEYCODE_LEFT_COMMA_13, KeyEvent.KEYCODE_SPACE,
+                        InputModeSwitcherManager.USER_DEF_KEYCODE_LEFT_PERIOD_14, InputModeSwitcherManager.USER_DEF_KEYCODE_LANG_2))
                 }
             }
             InputModeSwitcherManager.MASK_SKB_LAYOUT_NUMBER -> {
@@ -404,14 +406,23 @@ class KeyboardLoaderUtil private constructor() {
                 }
             }
         } else {
-            if (t9Keys.size == 5) {
-                softKeyToggle.widthF = 0.147f
-                t9Keys[0].widthF = 0.147f;t9Keys[1].widthF = 0.099f
-                t9Keys[2].widthF = 0.099f;t9Keys[3].widthF = 0.396f
-                t9Keys[4].widthF = 0.099f
-            } else {
-                t9Keys[0].widthF = 0.18f;t9Keys[1].widthF = 0.147f
-                t9Keys[2].widthF = 0.336f;t9Keys[3].widthF = 0.147f
+            when (t9Keys.size) {
+                6 -> {
+                    t9Keys[0].widthF = 0.18f;t9Keys[1].widthF = 0.105f
+                    t9Keys[2].widthF = 0.105f;t9Keys[3].widthF = 0.21f
+                    t9Keys[4].widthF = 0.105f;t9Keys[5].widthF = 0.105f
+                    softKeyToggle.widthF = 0.185f
+                }
+                5 -> {
+                    softKeyToggle.widthF = 0.147f
+                    t9Keys[0].widthF = 0.147f;t9Keys[1].widthF = 0.099f
+                    t9Keys[2].widthF = 0.099f;t9Keys[3].widthF = 0.396f
+                    t9Keys[4].widthF = 0.099f
+                }
+                else -> {
+                    t9Keys[0].widthF = 0.18f;t9Keys[1].widthF = 0.147f
+                    t9Keys[2].widthF = 0.336f;t9Keys[3].widthF = 0.147f
+                }
             }
         }
         keyBeans.addAll(t9Keys)
