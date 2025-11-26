@@ -80,7 +80,10 @@ class CandidatesContainer(context: Context, inputView: InputView) : BaseContaine
     }
 
     private fun initView(context: Context) {
-        mRVSymbolsView = SwipeRecyclerView(context)
+        mRVSymbolsView = SwipeRecyclerView(context).apply {
+            clipToPadding = false
+            setPadding(0, 0, dp(56), 0)
+        }
         mRVSymbolsView.setHasFixedSize(true)
         mRVSymbolsView.setItemAnimator(null)
         mRVLeftPrefix.setLayoutManager(LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false))

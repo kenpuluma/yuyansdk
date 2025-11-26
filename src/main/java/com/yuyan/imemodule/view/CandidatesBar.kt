@@ -87,6 +87,7 @@ class CandidatesBar(context: Context?, attrs: AttributeSet?) : RelativeLayout(co
             }
             mRVCandidates = RecyclerView(context).apply {
                 setItemAnimator(null)
+                setPadding(dp(14), 0, 0, 0)
                 layoutParams = LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 1f)
                 layoutManager =
                     CustomLinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
