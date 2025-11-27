@@ -27,7 +27,6 @@ import com.yuyan.imemodule.data.theme.ThemeManager
 import com.yuyan.imemodule.database.DataBaseKT
 import com.yuyan.imemodule.entity.SkbFunItem
 import com.yuyan.imemodule.prefs.AppPrefs
-import com.yuyan.imemodule.prefs.behavior.KeyboardOneHandedMod
 import com.yuyan.imemodule.prefs.behavior.SkbMenuMode
 import com.yuyan.imemodule.service.DecodingInfo
 import com.yuyan.imemodule.singleton.EnvironmentSingleton.Companion.instance
@@ -68,6 +67,10 @@ class CandidatesBar(context: Context?, attrs: AttributeSet?) : RelativeLayout(co
 
     // 初始化候选词界面
     private fun initCandidateView() {
+        val oneHandedModSwitch = AppPrefs.getInstance().keyboardSetting.oneHandedModSwitch.getValue()
+        val pinyinPaddingDp = if (oneHandedModSwitch) 24 else 30
+        val candidatePaddingDp = if (oneHandedModSwitch) 7 else 15
+        val arrowExtraWidthDp = if (oneHandedModSwitch) 22 else 36
         if(!::mCandidatesDataContainer.isInitialized) {
             mCandidatesDataContainer = LinearLayout(context).apply {
                 orientation = LinearLayout.VERTICAL
@@ -75,7 +78,6 @@ class CandidatesBar(context: Context?, attrs: AttributeSet?) : RelativeLayout(co
             }
             mComposingView = TextView(context).apply {
                 includeFontPadding = false
-                setPadding(dp(10), 0, dp(10), 0)
             }
             candidatesData = LinearLayout(context).apply {
                 gravity = Gravity.CENTER_VERTICAL
@@ -87,7 +89,6 @@ class CandidatesBar(context: Context?, attrs: AttributeSet?) : RelativeLayout(co
             }
             mRVCandidates = RecyclerView(context).apply {
                 setItemAnimator(null)
-                setPadding(dp(14), 0, 0, 0)
                 layoutParams = LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 1f)
                 layoutManager =
                     CustomLinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -119,8 +120,11 @@ class CandidatesBar(context: Context?, attrs: AttributeSet?) : RelativeLayout(co
         }
         var candidatesHeight = instance.heightForCandidates
         mComposingView.layoutParams = LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, instance.heightForcomposing)
-        mRightArrowBtn.layoutParams = LinearLayout.LayoutParams(candidatesHeight, candidatesHeight, 0f).apply { marginEnd = dp(10) }
+        mComposingView.setPadding(dp(pinyinPaddingDp), 0, dp(10), 0)
+        mRightArrowBtn.layoutParams = LinearLayout.LayoutParams(candidatesHeight + dp(arrowExtraWidthDp), candidatesHeight, 0f).apply { marginEnd = dp(10) }
+        mRightArrowBtn.setPadding(dp(arrowExtraWidthDp), 0, 0, 0)
         candidatesData.layoutParams = LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, candidatesHeight)
+        mRVCandidates.setPadding(dp(candidatePaddingDp), 0, 0, 0)
         mRightArrowBtn.setOnClickListener { view: View ->
             when (val level = (view as ImageView).drawable.level) {
                 2 -> mCvListener.onClickClearCandidate()
@@ -130,15 +134,8 @@ class CandidatesBar(context: Context?, attrs: AttributeSet?) : RelativeLayout(co
                 }
             }
         }
-        val oneHandedModSwitch = AppPrefs.getInstance().keyboardSetting.oneHandedModSwitch.getValue()
-        val oneHandedMod = AppPrefs.getInstance().keyboardSetting.oneHandedMod.getValue()
-        if (oneHandedModSwitch && oneHandedMod == KeyboardOneHandedMod.LEFT) {
-            candidatesData.addView(mRightArrowBtn)
-            candidatesData.addView(mRVCandidates, LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, candidatesHeight, 1f))
-        } else {
-            candidatesData.addView(mRVCandidates, LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, candidatesHeight, 1f))
-            candidatesData.addView(mRightArrowBtn)
-        }
+        candidatesData.addView(mRVCandidates, LinearLayout.LayoutParams(0, candidatesHeight, 1f))
+        candidatesData.addView(mRightArrowBtn)
         mComposingView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, instance.composingTextSize)
         mCandidatesAdapter.notifyChanged()
     }
