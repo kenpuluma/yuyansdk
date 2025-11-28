@@ -179,23 +179,10 @@ class SymbolContainer(context: Context, inputView: InputView) : BaseContainer(co
             if(!isLockSymbol) KeyboardManager.instance.switchKeyboard()
             inputView.responseKeyEvent(softKey)
         } else {  //表情、颜文字
-            if(!YuyanEmojiCompat.isWeChatInput || mVPSymbolsView.currentItem != 1 ) {
-                DataBaseKT.instance.usedSymbolDao().insert(UsedSymbol(symbol = result, type = "emoji"))
-                val num = max(DataBaseKT.instance.usedSymbolDao().getCount("emoji") - 50, 0)
-                DataBaseKT.instance.usedSymbolDao().deleteOldest("emoji", num)
-                inputView.responseKeyEvent(softKey)
-            } else {
-                val emojions = EmojiconData.wechatEmojiconData[value]
-                if(emojions?.isNotEmpty() == true) {
-                    CoroutineScope(Dispatchers.Main).launch {
-                        emojions[Random.nextInt(emojions.size)].forEach {
-                            inputView.responseKeyEvent(SoftKey(label = it))
-                            inputView.performEditorAction(EditorInfo.IME_ACTION_SEND)
-                            delay(100)
-                        }
-                    }
-                }
-            }
+            DataBaseKT.instance.usedSymbolDao().insert(UsedSymbol(symbol = result, type = "emoji"))
+            val num = max(DataBaseKT.instance.usedSymbolDao().getCount("emoji") - 50, 0)
+            DataBaseKT.instance.usedSymbolDao().deleteOldest("emoji", num)
+            inputView.responseKeyEvent(softKey)
         }
     }
 

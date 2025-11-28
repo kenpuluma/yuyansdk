@@ -51,8 +51,6 @@ object EmojiconData{
         }
     }
 
-    val wechatEmojiconData: Map<String, List<Array<String>>> = linkedMapOf()
-
     val SymbolPreset: Map<String, String> = hashMapOf(
         "(" to ")", "[" to "]", "{" to "}", "（" to "）", "［" to "］", "｛" to "｝", "❨" to "❩", "❲" to "❳", "❴" to "❵", "‘" to "’", "“" to "”", "❛" to "❜", "❝" to "❞", "<" to ">", "〈" to "〉", "《" to "》", "〔" to "〕", "【" to "】", "〘" to "〙", "「" to "」", "『" to "』", "︵" to "︶", "︷" to "︸", "︹" to "︺", "︻" to "︼", "︽" to "︾", "︿" to "﹀", "﹁" to "﹂",)
     }
