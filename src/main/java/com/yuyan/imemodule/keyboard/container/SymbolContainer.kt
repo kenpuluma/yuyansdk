@@ -235,14 +235,7 @@ class SymbolContainer(context: Context, inputView: InputView) : BaseContainer(co
         ivDelete.drawable.setTint(activeTheme.keyTextColor)
         val mSymbolsEmoji = when (mShowType) {
             SymbolMode.Emoticon -> EmojiconData.emoticonData
-            else -> {
-                if (!YuyanEmojiCompat.isWeChatInput) {
-                    val data = LinkedHashMap<Int, List<String>>()
-                    data.putAll(EmojiconData.emojiconData)
-                    data.remove(R.drawable.icon_emojibar_wechat)
-                    data
-                } else EmojiconData.emojiconData
-            }
+            else -> EmojiconData.emojiconData
         }
         mVPSymbolsView.adapter = SymbolPagerAdapter(context, mSymbolsEmoji, mShowType){ symbol, _ ->
             onItemClickOperate(symbol)
