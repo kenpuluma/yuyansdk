@@ -20,6 +20,7 @@ import splitties.views.dsl.core.matchParent
 
 class PrefixSettingsAdapter ( private val mDatas: MutableList<SideSymbol>, type:String) : RecyclerView.Adapter<PrefixSettingsAdapter.PrefixSettingsHolder>() {
     private var  mType = "pinyin"
+    private var isBinding = false
     init {
         mType = type
     }
@@ -49,13 +50,20 @@ class PrefixSettingsAdapter ( private val mDatas: MutableList<SideSymbol>, type:
     }
 
     override fun onBindViewHolder(holder: PrefixSettingsHolder, position: Int) {
-        if(position < mDatas.size) {
+        isBinding = true
+        if (position < mDatas.size) {
             holder.etPrefixKey.setText(mDatas[position].symbolKey)
             holder.etPrefixValue.setText(mDatas[position].symbolValue)
+        } else {
+            holder.etPrefixKey.setText("")
+            holder.etPrefixValue.setText("")
         }
+        isBinding = false
         holder.etPrefixKey.doOnTextChanged { s, _, _, _ ->
-            val key = s.toString()
+            if (isBinding) return@doOnTextChanged
+            val key = s?.toString() ?: ""
             val bindPos = holder.bindingAdapterPosition
+            if (bindPos == RecyclerView.NO_POSITION) return@doOnTextChanged
             if(bindPos < mDatas.size) {
                 val data = mDatas[bindPos]
                 data.symbolKey = key
@@ -71,8 +79,10 @@ class PrefixSettingsAdapter ( private val mDatas: MutableList<SideSymbol>, type:
             }
         }
         holder.etPrefixValue.doOnTextChanged { s, _, _, _ ->
-            val value = s.toString()
+            if (isBinding) return@doOnTextChanged
+            val value = s?.toString() ?: ""
             val bindPos = holder.bindingAdapterPosition
+            if (bindPos == RecyclerView.NO_POSITION) return@doOnTextChanged
             if(bindPos < mDatas.size) {
                 val data = mDatas[bindPos]
                 data.symbolValue = value
