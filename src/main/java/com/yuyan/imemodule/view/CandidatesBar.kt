@@ -57,6 +57,8 @@ class CandidatesBar(context: Context?, attrs: AttributeSet?) : RelativeLayout(co
     private lateinit var mRVContainerMenu:RecyclerView   // 候选词栏菜单
     private lateinit var mCandidatesMenuAdapter: CandidatesMenuAdapter
     private lateinit var candidatesData: LinearLayout //候选词视图
+    private lateinit var mArrowContainer: LinearLayout
+    private lateinit var mArrowDivider: View
     private var activeCandNo:Int = 0
 
     fun initialize(cvListener: CandidateViewListener) {
@@ -70,7 +72,7 @@ class CandidatesBar(context: Context?, attrs: AttributeSet?) : RelativeLayout(co
         val oneHandedModSwitch = AppPrefs.getInstance().keyboardSetting.oneHandedModSwitch.getValue()
         val pinyinPaddingDp = if (oneHandedModSwitch) 24 else 30
         val candidatePaddingDp = if (oneHandedModSwitch) 7 else 15
-        val arrowExtraWidthDp = if (oneHandedModSwitch) 22 else 36
+        val arrowExtraWidthDp = if (oneHandedModSwitch) 26 else 26
         if(!::mCandidatesDataContainer.isInitialized) {
             mCandidatesDataContainer = LinearLayout(context).apply {
                 orientation = LinearLayout.VERTICAL
@@ -82,10 +84,21 @@ class CandidatesBar(context: Context?, attrs: AttributeSet?) : RelativeLayout(co
             candidatesData = LinearLayout(context).apply {
                 gravity = Gravity.CENTER_VERTICAL
             }
+            mArrowDivider = View(context)
             mRightArrowBtn = ImageView(context).apply {
                 isClickable = true
                 isEnabled = true
                 setImageResource(R.drawable.sdk_level_list_candidates_display)
+            }
+            mArrowContainer = LinearLayout(context).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.CENTER_VERTICAL
+                layoutDirection = View.LAYOUT_DIRECTION_LTR
+                addView(mArrowDivider)
+                addView(
+                    mRightArrowBtn,
+                    LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+                )
             }
             mRVCandidates = RecyclerView(context).apply {
                 setItemAnimator(null)
@@ -115,16 +128,18 @@ class CandidatesBar(context: Context?, attrs: AttributeSet?) : RelativeLayout(co
             mCandidatesDataContainer.addView(candidatesData)
             this.addView(mCandidatesDataContainer, LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
         } else {
-            (mRightArrowBtn.parent as ViewGroup).removeView(mRightArrowBtn)
+            (mArrowContainer.parent as ViewGroup).removeView(mArrowContainer)
             (mRVCandidates.parent as ViewGroup).removeView(mRVCandidates)
         }
         var candidatesHeight = instance.heightForCandidates
         mComposingView.layoutParams = LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, instance.heightForcomposing)
         mComposingView.setPadding(dp(pinyinPaddingDp), 0, dp(10), 0)
-        mRightArrowBtn.layoutParams = LinearLayout.LayoutParams(candidatesHeight + dp(arrowExtraWidthDp), candidatesHeight, 0f).apply { marginEnd = dp(10) }
+        mArrowContainer.layoutParams = LinearLayout.LayoutParams(candidatesHeight + dp(arrowExtraWidthDp), candidatesHeight, 0f).apply { marginEnd = dp(10) }
         mRightArrowBtn.setPadding(dp(arrowExtraWidthDp), 0, 0, 0)
         candidatesData.layoutParams = LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, candidatesHeight)
         mRVCandidates.setPadding(dp(candidatePaddingDp), 0, 0, 0)
+        mArrowDivider.layoutParams = LinearLayout.LayoutParams(dp(1), LayoutParams.MATCH_PARENT)
+        updateArrowDividerColor()
         mRightArrowBtn.setOnClickListener { view: View ->
             when (val level = (view as ImageView).drawable.level) {
                 2 -> mCvListener.onClickClearCandidate()
@@ -135,7 +150,7 @@ class CandidatesBar(context: Context?, attrs: AttributeSet?) : RelativeLayout(co
             }
         }
         candidatesData.addView(mRVCandidates, LinearLayout.LayoutParams(0, candidatesHeight, 1f))
-        candidatesData.addView(mRightArrowBtn)
+        candidatesData.addView(mArrowContainer)
         mComposingView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, instance.composingTextSize)
         mCandidatesAdapter.notifyChanged()
     }
@@ -389,8 +404,16 @@ class CandidatesBar(context: Context?, attrs: AttributeSet?) : RelativeLayout(co
         mRightArrowBtn.drawable.setTint(textColor)
         mMenuRightArrowBtn.drawable.setTint(textColor)
         mIvMenuSetting.drawable.setTint(textColor)
+        updateArrowDividerColor(textColor)
         mCandidatesAdapter.notifyChanged()
         mCandidatesMenuAdapter.notifyChanged()
         mFlowerType.setTextColor(textColor)
+    }
+
+    private fun updateArrowDividerColor(textColor: Int = ThemeManager.activeTheme.keyTextColor) {
+        if(!::mArrowDivider.isInitialized) return
+        val alpha = (0.35f * 255).toInt()
+        val dividerColor = (alpha shl 24) or (textColor and 0x00FFFFFF)
+        mArrowDivider.setBackgroundColor(dividerColor)
     }
 }
