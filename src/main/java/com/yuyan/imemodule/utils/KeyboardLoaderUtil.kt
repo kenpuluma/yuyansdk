@@ -116,7 +116,6 @@ class KeyboardLoaderUtil private constructor() {
                 t9Key.first().mLeftF = 0.185f
                 t9Key.last().apply {
                     widthF = 0.18f
-                    stateId = 7
                 }
                 keyBeans.addAll(t9Key)
                 rows.add(keyBeans)
@@ -420,8 +419,8 @@ class KeyboardLoaderUtil private constructor() {
                     t9Keys[4].widthF = 0.099f
                 }
                 else -> {
-                    t9Keys[0].widthF = 0.18f;t9Keys[1].widthF = 0.147f
-                    t9Keys[2].widthF = 0.336f;t9Keys[3].widthF = 0.147f
+                    t9Keys[0].widthF = 0.18f;t9Keys[1].widthF = 0.21f
+                    t9Keys[2].widthF = 0.21f;t9Keys[3].widthF = 0.21f
                 }
             }
         }

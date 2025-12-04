@@ -32,7 +32,7 @@ object KeyboardData {
         SkbStyleMode.Yuyan to arrayListOf(
             arrayOf(InputModeSwitcherManager.USER_DEF_KEYCODE_LEFT_SYMBOL_12, KeyEvent.KEYCODE_APOSTROPHE, KeyEvent.KEYCODE_A, KeyEvent.KEYCODE_D, KeyEvent.KEYCODE_DEL),
             arrayOf(KeyEvent.KEYCODE_G, KeyEvent.KEYCODE_J, KeyEvent.KEYCODE_M, KeyEvent.KEYCODE_CLEAR),
-            arrayOf(KeyEvent.KEYCODE_P, KeyEvent.KEYCODE_T, KeyEvent.KEYCODE_W, KeyEvent.KEYCODE_AT)),
+            arrayOf(KeyEvent.KEYCODE_P, KeyEvent.KEYCODE_T, KeyEvent.KEYCODE_W, InputModeSwitcherManager.USER_DEF_KEYCODE_CURSOR_DIRECTION_9)),
     )
 
     val layoutHandwritingCn: Map<SkbStyleMode, ArrayList<Array<Int>>> = linkedMapOf(
@@ -119,7 +119,7 @@ object KeyboardData {
         SkbStyleMode.Yuyan to arrayListOf(
             arrayOf(InputModeSwitcherManager.USER_DEF_KEYCODE_LEFT_SYMBOL_12, 8, 9, 10, KeyEvent.KEYCODE_DEL),
             arrayOf(11, 12, 13, InputModeSwitcherManager.USER_DEF_KEYCODE_LEFT_PERIOD_14),
-            arrayOf(14, 15, 16, KeyEvent.KEYCODE_AT)),
+            arrayOf(14, 15, 16, InputModeSwitcherManager.USER_DEF_KEYCODE_CURSOR_DIRECTION_9)),
     )
 
     val layoutTextEdit: Map<SkbStyleMode, ArrayList<Array<Int>>> = linkedMapOf(
