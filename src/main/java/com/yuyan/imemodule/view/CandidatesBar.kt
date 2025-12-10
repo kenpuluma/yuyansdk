@@ -285,7 +285,7 @@ class CandidatesBar(context: Context?, attrs: AttributeSet?) : RelativeLayout(co
                     menuSkbFunsPreset[SkbMenuMode.AddPhrases]!!,
                 )
             }
-        } else if (DecodingInfo.isCandidatesListEmpty) {
+        } else if (DecodingInfo.isCandidatesListEmpty && mComposingView.text.isBlank()) {
             mRightArrowBtn.drawable.setLevel(0)
             showViewVisibility(mCandidatesMenuContainer)
             if (KeyboardManager.instance.currentContainer is SymbolContainer) {
